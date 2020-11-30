@@ -9,13 +9,13 @@
     "lint": "abaplint",
     "rename": "abaplint --rename && rm -rf src && cp -r renamed/src . && abaplint --fix",
     "test": "npm run lint && npm run downport && npm run unit",
-    "fix": "abaplint --fix"
+    "input": "node run.js"
   },
   "author": "",
   "license": "Unlicense",
   "dependencies": {
-    "@abaplint/cli": "^2.60.3",
-    "@abaplint/runtime": "^0.7.11",
-    "@abaplint/transpiler-cli": "^0.7.11"
+    "@abaplint/cli": "^2.61.5",
+    "@abaplint/runtime": "^0.8.9",
+    "@abaplint/transpiler-cli": "^0.8.9"
   }
 }
