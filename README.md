@@ -1,4 +1,10 @@
-# abap-advent-2020-template
+# abap-advent-2020
+These are my solutions for the Advent of Code 2020, done in ABAP in NodeJS.
+
+Please see the original: https://github.com/larshp/abap-advent-2020-template
+
+And on SAP Community: https://blogs.sap.com/2020/11/15/getting-ready-advent-of-code-2020/
+
 [Advent of Code](https://adventofcode.com) 2020 - ABAP Template
 
 Let's do it the difficult way! By ABAP running on [NodeJS](https://nodejs.org)
