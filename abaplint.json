@@ -71,9 +71,9 @@
       "updateDatabase": true,
       "insertDatabase": true,
       "modifyDatabase": true,
-      "readTable": true,
+      "readTable": false,
       "assign": true,
-      "find": true
+      "find": false
     },
     "check_syntax": true,
     "check_text_elements": true,
