@@ -22,7 +22,7 @@ ENDCLASS.
 CLASS ZCL_ADVENT2020_DAY02_joltdx IMPLEMENTATION.
 
   METHOD zif_advent2020_joltdx~solve.
-    
+
     SPLIT input AT |\n| INTO TABLE mt_input.
 
     output = |Part 1: { part_1( ) }. Part 2: { part_2( ) }|.
