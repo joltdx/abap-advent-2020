@@ -38,6 +38,12 @@ CLASS zcl_advent2020_day04_joltdx DEFINITION
       RETURNING
         VALUE(result) TYPE abap_bool.
 
+    METHODS valid_passport_data
+      IMPORTING
+        passport TYPE ty_passport
+      RETURNING
+        VALUE(result) TYPE abap_bool.
+
     METHODS part_1
       RETURNING
         VALUE(result) TYPE string.
@@ -134,6 +140,67 @@ CLASS zcl_advent2020_day04_joltdx IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD valid_passport_data.
+    DATA integer TYPE i.
+
+    integer = passport-byr.
+    IF integer < 1920 OR integer > 2002.
+      RETURN.
+    ENDIF.
+
+    integer = passport-iyr.
+    IF integer < 2010 OR integer > 2020.
+      RETURN.
+    ENDIF.
+
+    integer = passport-eyr.
+    IF integer < 2020 OR integer > 2030.
+      RETURN.
+    ENDIF.
+
+    FIND REGEX '(\d+)in' IN passport-hgt SUBMATCHES integer.
+    IF sy-subrc = 0.
+      IF integer < 59 OR integer > 76.
+        RETURN.
+      ENDIF.
+    ELSE.
+      FIND REGEX '(\d+)cm' IN passport-hgt SUBMATCHES integer.
+      IF sy-subrc = 0.
+        IF integer < 150 OR integer > 193.
+          RETURN.
+        ENDIF.
+      ELSE.
+        RETURN.
+      ENDIF.
+    ENDIF.
+
+    FIND REGEX '^#[0-9a-f]{6}$' IN passport-hcl.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    CASE passport-ecl.
+      WHEN 'amb' OR
+           'blu' OR
+           'brn' OR
+           'gry' OR
+           'grn' OR
+           'hzl' OR
+           'oth'.
+        " Fine.
+      WHEN OTHERS.
+        RETURN.
+    ENDCASE.
+
+    FIND REGEX '^[0-9]{9}$' IN passport-pid.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    result = abap_true.
+
+  ENDMETHOD.
+
   METHOD part_1.
     DATA valid_count TYPE i.
 
@@ -148,6 +215,17 @@ CLASS zcl_advent2020_day04_joltdx IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD part_2.
-    result = 'todo'.
+
+    DATA valid_count TYPE i.
+
+    LOOP AT mt_passports INTO DATA(passport).
+      IF valid_passport( passport ) = abap_true AND
+          valid_passport_data( passport ) = abap_true.
+        valid_count = valid_count + 1.
+      ENDIF.
+    ENDLOOP.
+
+    result = valid_count.
+
   ENDMETHOD.
 ENDCLASS.
