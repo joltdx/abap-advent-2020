@@ -144,29 +144,29 @@ CLASS zcl_advent2020_day04_joltdx IMPLEMENTATION.
     DATA integer TYPE i.
 
     integer = passport-byr.
-    IF integer < 1920 OR integer > 2002.
+    IF integer NOT BETWEEN 1920 AND 2002.
       RETURN.
     ENDIF.
 
     integer = passport-iyr.
-    IF integer < 2010 OR integer > 2020.
+    IF integer NOT BETWEEN 2010 AND 2020.
       RETURN.
     ENDIF.
 
     integer = passport-eyr.
-    IF integer < 2020 OR integer > 2030.
+    IF integer NOT BETWEEN 2020 AND 2030.
       RETURN.
     ENDIF.
 
     FIND REGEX '(\d+)in' IN passport-hgt SUBMATCHES integer.
     IF sy-subrc = 0.
-      IF integer < 59 OR integer > 76.
+      IF integer NOT BETWEEN 59 AND 76.
         RETURN.
       ENDIF.
     ELSE.
       FIND REGEX '(\d+)cm' IN passport-hgt SUBMATCHES integer.
       IF sy-subrc = 0.
-        IF integer < 150 OR integer > 193.
+        IF integer NOT BETWEEN 150 AND 193.
           RETURN.
         ENDIF.
       ELSE.
