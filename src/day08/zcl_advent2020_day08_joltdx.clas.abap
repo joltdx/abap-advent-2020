@@ -17,14 +17,18 @@ CLASS zcl_advent2020_day08_joltdx DEFINITION
       END OF ty_boot_code.
 
     DATA mt_boot_code TYPE STANDARD TABLE OF ty_boot_code.
+    DATA mt_lines_of_boot_code TYPE i.
 
     METHODS parse_input
       IMPORTING
         input TYPE string.
 
     METHODS run_until_inf_loop
-      RETURNING
-        VALUE(result) TYPE i.
+      EXPORTING
+        VALUE(result) TYPE i
+        VALUE(completed) TYPE abap_bool.
+
+    METHODS clear_visited.
 
     METHODS part_1
       RETURNING
@@ -63,6 +67,8 @@ CLASS ZCL_ADVENT2020_DAY08_joltdx IMPLEMENTATION.
       ENDIF.
       APPEND boot_code_line TO mt_boot_code.
     ENDLOOP.
+
+    mt_lines_of_boot_code = lines( mt_boot_code ).
   ENDMETHOD.
 
   METHOD run_until_inf_loop.
@@ -72,6 +78,13 @@ CLASS ZCL_ADVENT2020_DAY08_joltdx IMPLEMENTATION.
     instruction = 1.
     DO.
       READ TABLE mt_boot_code INDEX instruction ASSIGNING FIELD-SYMBOL(<line>).
+      IF sy-subrc <> 0.
+        result = accumulator.
+        IF instruction = mt_lines_of_boot_code + 1.
+          completed = abap_true.
+        ENDIF.
+        RETURN.
+      ENDIF.
 
       IF <line>-line_visited = abap_true.
         result = accumulator.
@@ -92,15 +105,43 @@ CLASS ZCL_ADVENT2020_DAY08_joltdx IMPLEMENTATION.
     ENDDO.
   ENDMETHOD.
 
+  METHOD clear_visited.
+    LOOP AT mt_boot_code ASSIGNING FIELD-SYMBOL(<boot_code>).
+      CLEAR <boot_code>-line_visited.
+    ENDLOOP.
+  ENDMETHOD.
+
   METHOD part_1.
 
-    result = run_until_inf_loop( ).
+    run_until_inf_loop( IMPORTING result = result ).
 
   ENDMETHOD.
 
   METHOD part_2.
+    DATA completed TYPE abap_bool.
 
-    result = 'todo'.
+    LOOP AT mt_boot_code ASSIGNING FIELD-SYMBOL(<boot_code>).
+      IF <boot_code>-operation = 'jmp'.
+        <boot_code>-operation = 'nop'.
+      ELSEIF <boot_code>-operation = 'nop'.
+        <boot_code>-operation = 'jmp'.
+      ELSE.
+        CONTINUE.
+      ENDIF.
+
+      run_until_inf_loop( IMPORTING result = result
+                                    completed = completed ).
+      IF completed = abap_true.
+        RETURN.
+      ENDIF.
+
+      IF <boot_code>-operation = 'jmp'.
+        <boot_code>-operation = 'nop'.
+      ELSEIF <boot_code>-operation = 'nop'.
+        <boot_code>-operation = 'jmp'.
+      ENDIF.
+      clear_visited( ).
+    ENDLOOP.
 
   ENDMETHOD.
 ENDCLASS.
