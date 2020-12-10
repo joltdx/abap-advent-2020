@@ -10,6 +10,12 @@ CLASS zcl_advent2020_day10_joltdx DEFINITION
   PRIVATE SECTION.
     DATA mt_input TYPE STANDARD TABLE OF i WITH EMPTY KEY.
 
+    METHODS count_options_from_adapter
+      IMPORTING
+        adapter TYPE i
+      RETURNING
+        VALUE(result) TYPE i.
+
     METHODS part_1
       RETURNING
         VALUE(result) TYPE string.
@@ -70,8 +76,45 @@ CLASS ZCL_ADVENT2020_DAY10_joltdx IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD part_2.
+    DATA lt_adapters TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA options_this_adapter TYPE i.
+    DATA combinations_one_adapter_ago TYPE i.
+    DATA combinations_two_adapters_ago TYPE i.
+    DATA combinations_three_adapters_ago TYPE i.
+    DATA combinations TYPE i.
 
-    result = 'todo'.
+    lt_adapters = mt_input.
+    SORT lt_adapters DESCENDING.
+    APPEND 0 TO lt_adapters.
+    combinations = 1.
+
+    LOOP AT lt_adapters INTO DATA(adapter).
+      options_this_adapter = count_options_from_adapter( adapter ).
+      CASE options_this_adapter.
+        WHEN 3.
+          combinations = combinations_one_adapter_ago + combinations_two_adapters_ago + combinations_three_adapters_ago.
+        WHEN 2.
+          combinations = combinations_one_adapter_ago + combinations_two_adapters_ago.
+      ENDCASE.
+
+      combinations_three_adapters_ago = combinations_two_adapters_ago.
+      combinations_two_adapters_ago = combinations_one_adapter_ago.
+      combinations_one_adapter_ago = combinations.
+    ENDLOOP.
+
+    result = combinations.
+  ENDMETHOD.
+
+  METHOD count_options_from_adapter.
+    DATA adapter_plus_3 TYPE i.
+    adapter_plus_3 = adapter + 3.
+
+    LOOP AT mt_input WHERE table_line > adapter INTO DATA(line_adapter).
+      IF line_adapter > adapter_plus_3.
+        EXIT.
+      ENDIF.
+      result = result + 1.
+    ENDLOOP.
 
   ENDMETHOD.
 
