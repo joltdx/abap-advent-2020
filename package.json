@@ -9,7 +9,8 @@
     "lint": "abaplint",
     "rename": "abaplint --rename && rm -rf src && cp -r renamed/src . && abaplint --fix",
     "test": "npm run lint && npm run downport && npm run unit",
-    "input": "node run.js"
+    "input": "node run.js",
+    "convert_input": "node run_convert.js"
   },
   "author": "",
   "license": "Unlicense",
