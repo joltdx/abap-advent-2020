@@ -4,7 +4,7 @@ CLASS zcl_advent2020_convert_joltdx DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    METHODS convert_to_value_statement
+    METHODS convert_to_abap_string
       IMPORTING
         input TYPE string
       RETURNING
@@ -16,8 +16,8 @@ ENDCLASS.
 
 
 CLASS ZCL_ADVENT2020_CONVERT_joltdx IMPLEMENTATION.
-
-  METHOD convert_to_value_statement.
+  METHOD convert_to_abap_string.
+    REPLACE ALL OCCURRENCES OF |\r| IN input WITH ||.
     SPLIT input AT |\n| INTO TABLE DATA(input_table).
     LOOP AT input_table INTO DATA(input_line).
       IF input_line IS INITIAL.

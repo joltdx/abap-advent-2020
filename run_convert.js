@@ -19,7 +19,7 @@ const input = fs.readFileSync(inputFile).toString();
 
 const className = Object.keys(clas)[0];
 const instance = new clas[className]();
-const methodName = "convert_to_value_statement";
+const methodName = "convert_to_abap_string";
 console.log("Class: " + className.toUpperCase());
 console.log("Method: " + methodName.toUpperCase());
 console.log("Input: " + inputFile);
