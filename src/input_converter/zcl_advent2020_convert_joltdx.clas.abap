@@ -20,9 +20,6 @@ CLASS ZCL_ADVENT2020_CONVERT_joltdx IMPLEMENTATION.
     REPLACE ALL OCCURRENCES OF |\r| IN input WITH ||.
     SPLIT input AT |\n| INTO TABLE DATA(input_table).
     LOOP AT input_table INTO DATA(input_line).
-      IF input_line IS INITIAL.
-        CONTINUE.
-      ENDIF.
       IF output IS INITIAL.
         output = |input = \|{ input_line }\\n\||.
       ELSE.
