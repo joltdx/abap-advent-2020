@@ -10,14 +10,14 @@ CLASS zcl_advent2020_day13_joltdx DEFINITION
   PRIVATE SECTION.
     TYPES:
       BEGIN OF ty_bus_offset,
-        bus TYPE i,
-        offset TYPE i,
+        bus TYPE p,
+        offset TYPE p,
       END OF ty_bus_offset.
-    DATA mv_earliest_timestamp TYPE i.
-    DATA mt_buses_in_service TYPE STANDARD TABLE OF i.
+    DATA mv_earliest_timestamp TYPE p.
+    DATA mt_buses_in_service TYPE STANDARD TABLE OF p.
     DATA mt_bus_and_offset TYPE STANDARD TABLE OF ty_bus_offset.
-    DATA mv_max_bus TYPE i.
-    DATA mv_max_bus_offset TYPE i.
+    DATA mv_max_bus TYPE p.
+    DATA mv_max_bus_offset TYPE p.
 
     METHODS part_1
       RETURNING
@@ -33,10 +33,10 @@ CLASS zcl_advent2020_day13_joltdx DEFINITION
 
     METHODS get_next_departure_after
       IMPORTING
-        after_when TYPE i
-        bus_number TYPE i
+        after_when TYPE p
+        bus_number TYPE p
       RETURNING
-        VALUE(result) TYPE i.
+        VALUE(result) TYPE p.
 ENDCLASS.
 
 
@@ -46,7 +46,7 @@ CLASS ZCL_ADVENT2020_DAY13_joltdx IMPLEMENTATION.
 
   METHOD zif_advent2020_joltdx~solve.
 
-    DATA this_is_an_integer TYPE i.
+    DATA this_is_an_integer TYPE p.
     DATA bus_offset TYPE ty_bus_offset.
     SPLIT input AT |\n| INTO DATA(timestamp) DATA(buses).
     mv_earliest_timestamp = timestamp.
@@ -71,10 +71,10 @@ CLASS ZCL_ADVENT2020_DAY13_joltdx IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD part_1.
-    DATA earliest_time TYPE i VALUE 9999999999.
-    DATA earliest_bus TYPE i.
-    DATA bus_last_start TYPE i.
-    DATA bus_next_start TYPE i.
+    DATA earliest_time TYPE p VALUE 9999999999.
+    DATA earliest_bus TYPE p.
+    DATA bus_last_start TYPE p.
+    DATA bus_next_start TYPE p.
 
     LOOP AT mt_buses_in_service INTO DATA(bus).
       bus_last_start = ( mv_earliest_timestamp DIV bus ) * bus.
@@ -99,16 +99,20 @@ CLASS ZCL_ADVENT2020_DAY13_joltdx IMPLEMENTATION.
     " (Also, I might have broken it before I left it for good... ) )
 
     " This gave me a results that's 22 off. Wat.
-    " Running in Steampunk instead (with minor adjustments of datatypes) gave me
-    " the correct answer.
+    " Running in ABAP Steampunk instead (with minor adjustments of datatypes) gave
+    " me the correct answer.
 
     " Wat.
 
-    DATA entire_product TYPE i VALUE 1.
-    DATA m TYPE i.
-    DATA x TYPE i.
-    DATA y TYPE i.
-    DATA sum_product TYPE i.
+    " So I've learnd that JavaScript uses IEEE754 and can be "imprecise at large numbers".
+    " And we're talking large numbers in this one...
+    " So. Well. I'll just leave it at that.
+
+    DATA entire_product TYPE p VALUE 1.
+    DATA m TYPE p.
+    DATA x TYPE p.
+    DATA y TYPE p.
+    DATA sum_product TYPE p.
 
     LOOP AT mt_bus_and_offset INTO DATA(bus_and_offset).
       entire_product = entire_product * bus_and_offset-bus.
@@ -124,6 +128,9 @@ CLASS ZCL_ADVENT2020_DAY13_joltdx IMPLEMENTATION.
         ENDIF.
       ENDDO.
       sum_product = sum_product + ( ( bus_and_offset-offset * y ) * m ).
+      WHILE sum_product > entire_product.
+        sum_product = sum_product - entire_product.
+      ENDWHILE.
     ENDLOOP.
 
     result = sum_product - ( ( sum_product DIV entire_product ) * entire_product ).
@@ -131,11 +138,11 @@ CLASS ZCL_ADVENT2020_DAY13_joltdx IMPLEMENTATION.
 
 
   METHOD part_2_oh_crap_no.
-    DATA departure TYPE i.
-    DATA timestamp TYPE i.
-    DATA after_timestamp TYPE i.
+    DATA departure TYPE p.
+    DATA timestamp TYPE p.
+    DATA after_timestamp TYPE p.
     DATA success TYPE abap_bool.
-    DATA next_max_bus_timestamp TYPE i.
+    DATA next_max_bus_timestamp TYPE p.
 
     READ TABLE mt_bus_and_offset INDEX 1 INTO DATA(first_bus).
     DELETE mt_bus_and_offset INDEX 1.
