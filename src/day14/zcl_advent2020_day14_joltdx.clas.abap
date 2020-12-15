@@ -17,12 +17,6 @@ CLASS zcl_advent2020_day14_joltdx DEFINITION
       RETURNING
         VALUE(result) TYPE string.
 
-    METHODS set_mem
-      IMPORTING
-        address TYPE int8
-        value TYPE int8
-        mask TYPE string.
-
 ENDCLASS.
 
 
@@ -37,7 +31,6 @@ CLASS ZCL_ADVENT2020_DAY14_joltdx IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD part_1.
-    set_mem( ).
     result = 'todo'.
 
   ENDMETHOD.
