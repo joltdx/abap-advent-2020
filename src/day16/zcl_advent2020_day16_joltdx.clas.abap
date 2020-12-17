@@ -46,7 +46,6 @@ CLASS zcl_advent2020_day16_joltdx DEFINITION
         value TYPE i
       RETURNING
         VALUE(result) TYPE abap_bool.
-
 ENDCLASS.
 
 
