@@ -308,16 +308,22 @@ CLASS ZCL_ADVENT2020_DAY17_joltdx IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD part_2_cycle.
-    DATA(lt_map_p2) = mt_map_p2.
+    DATA lt_map_p2 TYPE ty_space_p2_tt.
+    FIELD-SYMBOLS <w> TYPE ty_dim_w.
+    FIELD-SYMBOLS <z> TYPE ty_dim_z.
+    FIELD-SYMBOLS <y> TYPE ty_dim_y.
+    FIELD-SYMBOLS <x> TYPE ty_dim_x.
+
+    lt_map_p2 = mt_map_p2.
 
     DO lines( lt_map_p2 ) TIMES.
-      READ TABLE lt_map_p2 INDEX sy-index ASSIGNING FIELD-SYMBOL(<w>).
+      READ TABLE lt_map_p2 INDEX sy-index ASSIGNING <w>.
       DO lines( <w>-z ) TIMES.
-        READ TABLE <w>-z INDEX sy-index ASSIGNING FIELD-SYMBOL(<z>).
+        READ TABLE <w>-z INDEX sy-index ASSIGNING <z>.
         DO lines( <z>-y ) TIMES.
-          READ TABLE <z>-y INDEX sy-index ASSIGNING FIELD-SYMBOL(<y>).
+          READ TABLE <z>-y INDEX sy-index ASSIGNING <y>.
           DO lines( <y>-x ) TIMES.
-            READ TABLE <y>-x INDEX sy-index ASSIGNING FIELD-SYMBOL(<x>).
+            READ TABLE <y>-x INDEX sy-index ASSIGNING <x>.
             IF <x>-s = |#| AND count_neighbours_up_to_4_p2( w = <w>-w
                                                             z = <z>-z
                                                             y = <y>-y
@@ -338,22 +344,25 @@ CLASS ZCL_ADVENT2020_DAY17_joltdx IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD count_neighbours_up_to_4.
+    DATA map_z TYPE ty_dim_z.
+    DATA map_y TYPE ty_dim_y.
+    DATA map_x TYPE ty_dim_x.
     DATA s_z TYPE i.
     DATA s_y TYPE i.
     DATA s_x TYPE i.
 
     DO 3 TIMES.
       s_z = ( z + sy-index ) - 2.
-      READ TABLE mt_map WITH KEY z = s_z INTO DATA(map_z).
+      READ TABLE mt_map WITH KEY z = s_z INTO map_z.
       DO 3 TIMES.
         s_y = ( y + sy-index ) - 2.
-        READ TABLE map_z-y WITH KEY y = s_y INTO DATA(map_y).
+        READ TABLE map_z-y WITH KEY y = s_y INTO map_y.
         DO 3 TIMES.
           s_x = ( x + sy-index ) - 2.
           IF s_x = x AND s_y = y AND s_z = z.
             CONTINUE.
           ENDIF.
-          READ TABLE map_y-x WITH KEY x = s_x INTO DATA(map_x).
+          READ TABLE map_y-x WITH KEY x = s_x INTO map_x.
           IF map_x-s = |#|.
             result = result + 1.
             IF result = 4.
@@ -367,6 +376,10 @@ CLASS ZCL_ADVENT2020_DAY17_joltdx IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD count_neighbours_up_to_4_p2.
+    DATA map_w TYPE ty_dim_w.
+    DATA map_z TYPE ty_dim_z.
+    DATA map_y TYPE ty_dim_y.
+    DATA map_x TYPE ty_dim_x.
     DATA s_w TYPE i.
     DATA s_z TYPE i.
     DATA s_y TYPE i.
@@ -374,19 +387,19 @@ CLASS ZCL_ADVENT2020_DAY17_joltdx IMPLEMENTATION.
 
     DO 3 TIMES.
       s_w = ( w + sy-index ) - 2.
-      READ TABLE mt_map_p2 WITH KEY w = s_w INTO DATA(map_w).
+      READ TABLE mt_map_p2 WITH KEY w = s_w INTO map_w.
       DO 3 TIMES.
         s_z = ( z + sy-index ) - 2.
-        READ TABLE map_w-z WITH KEY z = s_z INTO DATA(map_z).
+        READ TABLE map_w-z WITH KEY z = s_z INTO map_z.
         DO 3 TIMES.
           s_y = ( y + sy-index ) - 2.
-          READ TABLE map_z-y WITH KEY y = s_y INTO DATA(map_y).
+          READ TABLE map_z-y WITH KEY y = s_y INTO map_y.
           DO 3 TIMES.
             s_x = ( x + sy-index ) - 2.
             IF s_x = x AND s_y = y AND s_z = z AND s_w = w.
               CONTINUE.
             ENDIF.
-            READ TABLE map_y-x WITH KEY x = s_x INTO DATA(map_x).
+            READ TABLE map_y-x WITH KEY x = s_x INTO map_x.
             IF map_x-s = |#|.
               result = result + 1.
             ENDIF.
