@@ -1,0 +1,21 @@
+CLASS zcl_advent2020_cup23_joltdx DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    DATA mv_cup TYPE i.
+    DATA mo_next TYPE REF TO zcl_advent2020_cup23_joltdx.
+    METHODS constructor
+      IMPORTING value TYPE i.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS ZCL_ADVENT2020_CUP23_joltdx IMPLEMENTATION.
+  METHOD constructor.
+    mv_cup = value.
+  ENDMETHOD.
+ENDCLASS.
